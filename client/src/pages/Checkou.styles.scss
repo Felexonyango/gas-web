@@ -1,0 +1,42 @@
+.checkout{
+
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+h4{
+    margin: 0;
+    margin-top: 1rem;
+}
+button{
+    width: 200px;
+    margin: 0;
+
+}
+.stripe-card{
+    margin: 1rem 0 ;
+}
+
+.card-number{
+    margin-top: 2rem;
+}
+.card-element{
+    border: 1px  solid grey;
+    border-radius: 3px;
+    padding: 10px;
+    margin: 55%;
+    margin: auto;
+
+}
+.error{
+    border: 1px solid red;
+}
+.error-message{
+    color: red;
+    font-size: 1.5rem;
+}
+.nomad-input{
+
+    width: 100%;
+}
