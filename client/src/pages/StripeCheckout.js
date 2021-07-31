@@ -9,33 +9,25 @@ const StripeCheckout = () => {
     const {cartItems} =useContext(CartContext)
     const stripe =useStripe()
     const handlercheout = async(e)=>{
-   e.preventDefault()
-   const line_item=cartItems.map(product=>{
+       e.preventDefault()
+   const products=cartItems.map((product)=>{
        return{
-        quantity:product.quantity,
-        price_data:{
-            currency:'usd',
-            unit_amount:product.price*100,
-            product_data:{
-                name:product.title,
-                description:product.description,
-                images:[
-                    product.photo
-                ],
-            }
-        }
+        amount:product.price *100,
+        description:product.description,
+        currency:'usd',
+        name:product.name,
+        photo:product.photo,
+
        }
    })
 
-
-
    const response = await Axios.post('http://localhost:5000/api/payment/checkout',{
 
-       body:{line_item,customer_email:email}
+       body:{products,stripeEmail:email}
    })
-   const {sessionId} =response;
+   const {customerID} =response;
    const {error}= await stripe.redirectToCheckout({
-       sessionId
+       customerID
    })
    if(error){
        console.log(error)

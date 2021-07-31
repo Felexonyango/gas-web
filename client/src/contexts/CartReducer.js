@@ -10,6 +10,7 @@ export const sumItems = cartItems => {
     return { itemCount, total }
 }
 
+
 export const CartReducer = (state, action) => {
     switch (action.type) {
         case "ADD_ITEM":
