@@ -1,43 +1,47 @@
 import React, { useContext, useState } from 'react'
 import {useStripe} from  '@stripe/react-stripe-js'
 import { CartContext } from '../contexts/CartContext'
-
 import Axios from 'axios'
 import "./Checkou.styles.scss"
 const StripeCheckout = () => {
     const [email,setEmail] =useState('')
-    const {cartItems} =useContext(CartContext)
+  const {cartItems} =useContext(CartContext)
     const stripe =useStripe()
-    const handlercheout = async(e)=>{
-       e.preventDefault()
-   const products=cartItems.map((product)=>{
-       return{
-        amount:product.price *100,
-        description:product.description,
-        currency:'usd',
-        name:product.name,
-        photo:product.photo,
 
-       }
-   })
+    const Handlercheckout = async(e)=>{
+     e.preventDefault();
+ const line_items= cartItems.map(item=>{
+return{
+ quantity:item.quantity,
+ price_data: {
+    currency: "usd",
+    unit_amount: item.price*100,
+    product_data: {
+      name: item.name,
+      description:item.description,
+      images:[
+          item.photo
+      ]
+    },
+}
 
-   const response = await Axios.post('http://localhost:5000/api/payment/checkout',{
+ }  
+});
+const res =  await Axios.post("http://localhost:5000/api/payment/checkout",{
+ body:{line_items,customer_email:email}
 
-       body:{products,stripeEmail:email}
-   })
-   const {customerID} =response;
-   const {error}= await stripe.redirectToCheckout({
-       customerID
-   })
-   if(error){
-       console.log(error)
-   }
-
-    }
-   
+})
+const {sessionId} =res;
+const{error}= await stripe.redirectToCheckout({
+    sessionId
+})
+if(error){
+    console.log(error)
+}
+}
 
     return (
-        <form onSubmit={handlercheout}>
+        <form onSubmit={Handlercheckout}>
 <div>
     <input
     type="email"
