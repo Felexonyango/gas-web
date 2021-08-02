@@ -9,6 +9,6 @@ require('process')
  config.STRIPE_KEY=""+process.env.STRIPE_KEY,
 config. KEY=""+process.env.KEY,
 config.SECRETE=""+process.env.SECRETE,
-config.WEB_URL=""+process.env.WEB_URL
+
 
  module.exports =config

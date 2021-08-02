@@ -35,18 +35,18 @@ const Register = ()=> {
     
   });
 
-  const { name, email, password, phone } = user;
+  const { username, email, password, phone } = user;
 
   const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
   const onSubmit = e => {
     e.preventDefault();
-    if (name === "" || email === "" || password === ""||phone==="") {
+    if (username === "" || email === "" || password === ""||phone==="") {
       setAlert("Please enter all fields", "danger");
     }
     else {
       register({
-        name,
+        username,
         email,
         phone,
         password
@@ -62,12 +62,12 @@ const Register = ()=> {
       </h1>
       <form onSubmit={onSubmit}>
         <div className='form-group'>
-          <label htmlFor='name'>Name</label>
+          <label htmlFor='name'>Username</label>
           <input
             id='name'
             type='text'
-            name='name'
-            value={name}
+            name='username'
+            value={username}
             onChange={onChange}
             required
           />

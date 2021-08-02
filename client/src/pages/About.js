@@ -13,7 +13,7 @@ const Login = ()=> {
 
   useEffect(() => {
     if (isAuthenticated) {
-      history.push("/sub");
+      history.push("/subscribe");
     }
 
     if (error === "Invalid Credentials") {

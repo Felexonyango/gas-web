@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const {STRIPE_KEY, WEB_URL} =require('../confing')
+const {STRIPE_KEY} =require('../confing')
  
 
 // Stripe

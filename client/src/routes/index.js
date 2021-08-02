@@ -10,7 +10,7 @@ import Register from "../pages/auth/Register";
 import Checkout from "../pages/Checkout"
 import Login from "../pages/About";
 import AboutUs from "../pages/AboutUs";
-import Subscription  from '../pages/Subscription'
+import Sub from "../pages/Sub"
 
 const Routes = () => {
   return (
@@ -19,7 +19,7 @@ const Routes = () => {
           
         <Route exact  path='/' component={Home} />
           <Route path="/checkout" component={Check} />
-        
+        <Route path="/subscribe" component={Sub}/>
           <Route path ="/contact" component={Contact}/>
           < Route path="/login"component={Login}/>
           <Route path="/register"component={Register}/>
@@ -27,8 +27,7 @@ const Routes = () => {
           <Route path="/order" component={Store}/>
           <Route path="/cart" component={Cart} />
           <Route path="*" component={NotFound} />
-          <Route path="/sub"component={Subscription}/>
-       
+            
           <Route path="/checkout"component={Checkout}/>
 
         </Switch>

@@ -4,12 +4,13 @@ const userSchema =new Schema({
 
     username:{
         type:String,
-        required:true
+        required:true,
     },
     email:{
         type:String,
         required:true,
         unique:true,
+        lowercase:true,
     },
    
 
@@ -25,6 +26,8 @@ const userSchema =new Schema({
         required: true,
         default: false
     },
+    resetToken:String,
+    expireToken:Date,
 
 
     date:{

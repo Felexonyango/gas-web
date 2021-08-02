@@ -2,9 +2,18 @@ const express = require('express');
 const expressAsyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const User = require('../model/UserModel')
-const data = require('../seeds/seed');
-const { generateToken, isAuth } = require('../util');
+const { generateToken} = require('../util');
+const nodemailer = require("nodemailer");
+const sendgridTransport =require('nodemailer-sendgrid-transport')
+const crypto  =require('crypto')
 const userRouter = express.Router();
+const  transporter= nodemailer.createTransport(sendgridTransport({
+
+    auth:{
+        API_KEY:"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"
+    }
+}))
+
 
 userRouter.get('/',async(req,res)=>{
     res.send("Gas api created")
@@ -14,21 +23,27 @@ userRouter.get('/',async(req,res)=>{
 
 
 // /api/users/register
-userRouter.post('/register', expressAsyncHandler(async ({body}, res) => {
-    // console.log('register req.body:', body);
+userRouter.post('/register',(async (req, res) => {
+    
+    
     try{
         
+        const salt = await bcrypt.genSalt(10);
+        const password = await req.body.password
+        const username = await req.body.username
+        const email = await req.body.email
+        const phone = await req.body.phone
         const user = new User({
-            username: body.username,
-            email: body.email,
-            phone:body.phone,
-            password: bcrypt.hashSync(body.password, 8)
+            username:username,
+            email:email,
+            phone:phone,
+            password: bcrypt.hashSync(password, salt)
         });
         // save new user in db
-        const createdUser = await user.save();
+        const createdUser = await user.save()
     
         // send user obj back
-        res.send({
+      return res.send({
             _id: createdUser._id,
             username: createdUser.username,
             email: createdUser.email,
@@ -36,11 +51,13 @@ userRouter.post('/register', expressAsyncHandler(async ({body}, res) => {
             isAdmin: createdUser.isAdmin,
             token: generateToken(createdUser)
         });
-        await User.findOne({ email });
+       User.findOne({ email });
 
       if (user) {
+
         return res.status(400).json({ msg: "User already exists" });
       }
+
 
     }
     catch(err){
@@ -70,8 +87,8 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
                     isAdmin: user.isAdmin,
                     token: generateToken(user)
                 });
-    
-                return;
+                
+                
             }
         }
     }
@@ -83,67 +100,41 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
     
   
 })
-); 
+)
+//reset password
 
-
-
-
-// /api/users/profile
-userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
-    // console.log('req in user profile route', req);
-    try{
-        const user = await User.findById(req.user._id);
-        if(user) {
-            user.username = req.body.username || user.username;
-            user.email = req.body.email || user.email;
-            // if password is in req.body, hash password 
-            if(req.body.password) {
-                user.password = bcrypt.hashSync(req.body.password, 8)
-            }
-    
-            //save updated user info
-            const updatedUser = await user.save();
-            //send the updated user info back to the front end 
-            res.send({
-                _id: updatedUser._id,
-                username: updatedUser.username,
-                email: updatedUser.email,
-                phone:updatedUser.phone,
-                isAdmin: updatedUser.isAdmin,
-                token: generateToken(updatedUser)
-            });
-
+userRouter.post("/reset-password",(req,res)=>{
+crypto.randomBytes(32,(err,buffer)=>{
+    if(err){
+        console.log(err)
     }
-   
-    // use userId to get use info and then update
-  
-    }
-    catch(err){
-        console.log(err.message)
-        res.status(500).send("Server Error");
-    }
-}));
-
-// /api/users/details 
-userRouter.get('/:id', expressAsyncHandler(async (req, res) => {
-    //get user info from User db
-    try{
-
-        const user = await User.findById(req.params.id);
-        //send user obj backto front end if there is user 
-        if(user) {
-            res.send(user);
-        } else {
-            res.status(404).send({ message: 'User Not Found'});
+    const token =buffer.toString("hex")
+    User.findOne({email:req.body.email})
+    .then(user=>{
+        if(!user){
+            return  res.status(500).json({error:"user does not exist with that email"})
         }
-    }
-   catch(err){
-   console.log(err.message)
-   res.status(500).send("Server Error");
-   }
+        user.resetToken=token;
+        user.expireToken=Date.now() +36000000
+        user.save()
+        .then(result=>{
+            transporter.sendMail({
+                to:user.email,
+                from:"no-replay@insta.com",
+                subject:"password reset",
+                html:`
+                <p>You requested for password reset</P>
+                <h5>click in this  <a href ="http://localhost:3000/reset${token}">link </a> to reset password </h5>
+                <`
+            })
+             return res.json({message:"check your email"})
+        })
+        
+        
 
+    })
+})
 
-}));
-
+})
 
 module.exports = userRouter;
