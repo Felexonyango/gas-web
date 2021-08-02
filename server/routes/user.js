@@ -6,16 +6,10 @@ const data = require('../seeds/seed');
 const { generateToken, isAuth } = require('../util');
 const userRouter = express.Router();
 
-userRouter.get('/api',async(req,res)=>{
+userRouter.get('/',async(req,res)=>{
     res.send("Gas api created")
 })
-userRouter.get('/seed', expressAsyncHandler(async (req, res) => {
-    // remove users before inserting. it will remove all users ... be cautious to use it 
-    await User.deleteMany({});
-    const createdUsers = await User.insertMany(data.users);
-    res.send( { createdUsers });
-})
-); 
+
 
 
 
@@ -60,7 +54,7 @@ userRouter.post('/register', expressAsyncHandler(async ({body}, res) => {
 
 
 // /api/user/signin route 
-userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
+userRouter.post('/login', expressAsyncHandler(async (req, res) => {
     try{
 
         const user = await User.findOne({ email: req.body.email});

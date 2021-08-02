@@ -13,12 +13,10 @@ const Header = () => {
           
             <Link to='/'>HOME</Link>
             <Link to ='/order'>ORDER NOW</Link>
-          <Link to ="/about" >ABOUT US </Link>
+          <Link to ="/about" >OUR STORY </Link>
             <Link to ='/contact'>CONTACT US</Link>
-           
-            <Link to ='/register'>SIGN IN</Link>
-        
             
+            <Link to ='/register'>SIGN IN</Link>
             <Link to='/cart'> <CartIcon/> ({itemCount})</Link>
         </header>
      );

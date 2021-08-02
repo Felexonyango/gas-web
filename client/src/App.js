@@ -7,6 +7,8 @@ import setAuthToken from "./utils/setAuthToken";
 import {Elements} from '@stripe/react-stripe-js'
 import {loadStripe} from '@stripe/stripe-js'
 import "./App.css";
+import AuthState from './contexts/auth/AuthState'
+import AlertState from './contexts/alert/AlertState'
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -15,6 +17,8 @@ if (localStorage.token) {
 const stripePromise =loadStripe(`${process.env.React_stripe}`)
 const App = () => {
     return ( 
+      <AuthState>
+        <AlertState>
         <HelmetProvider>
         <ProductsContextProvider>
           <CartContextProvider>
@@ -26,6 +30,8 @@ const App = () => {
           </CartContextProvider>
         </ProductsContextProvider>
       </HelmetProvider>
+      </AlertState>
+      </AuthState>
 
      );
 }
