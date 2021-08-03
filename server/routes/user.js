@@ -4,13 +4,14 @@ const bcrypt = require('bcryptjs');
 const User = require('../model/UserModel')
 const { generateToken} = require('../util');
 const nodemailer = require("nodemailer");
+const {API_KEY} =require('../confing')
 const sendgridTransport =require('nodemailer-sendgrid-transport')
 const crypto  =require('crypto')
 const userRouter = express.Router();
 const  transporter= nodemailer.createTransport(sendgridTransport({
 
     auth:{
-        API_KEY:"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"
+        API_KEY:`${API_KEY}`
     }
 }))
 
@@ -41,7 +42,8 @@ userRouter.post('/register',(async (req, res) => {
         });
         // save new user in db
         const createdUser = await user.save()
-    
+        User.findOne({ email });
+
         // send user obj back
       return res.send({
             _id: createdUser._id,
@@ -51,12 +53,7 @@ userRouter.post('/register',(async (req, res) => {
             isAdmin: createdUser.isAdmin,
             token: generateToken(createdUser)
         });
-       User.findOne({ email });
-
-      if (user) {
-
-        return res.status(400).json({ msg: "User already exists" });
-      }
+       
 
 
     }
