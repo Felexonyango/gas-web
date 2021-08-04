@@ -6,7 +6,9 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  FORGET_PASSWORD_SUCCESS,
+  FORGET_PASSWORD_FAIL
 } from "../types"
 
 export  const AuthReducer =(state, action) => {
@@ -20,6 +22,7 @@ export  const AuthReducer =(state, action) => {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
+      case FORGET_PASSWORD_SUCCESS:
       localStorage.setItem("token", action.payload.token);
       return {
         ...state,
@@ -28,6 +31,7 @@ export  const AuthReducer =(state, action) => {
         loading: false
       };
     case REGISTER_FAIL:
+    case FORGET_PASSWORD_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:

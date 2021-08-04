@@ -46,7 +46,10 @@ const  Sub = ()=> {
             <div className="text-center mt-5">
                 <h1>Subscription</h1>
                 <ul>{isAuthenticated ? authLinks : guestLinks}</ul>
-               
+              
+            </div>
+            <div>
+            <Link to ='/recover'>resetpassword</Link>
             </div>
             
         </div>

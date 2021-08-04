@@ -11,7 +11,9 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  FORGET_PASSWORD_SUCCESS,
+  FORGET_PASSWORD_FAIL
 } from "../types";
 
 const AuthState = props => {
@@ -98,6 +100,35 @@ const AuthState = props => {
   // Clear Errors
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
 
+//Reset passord 
+const forgetpassword =async formData =>{
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+ try{
+
+ const res = await axios.post("api/users/reset-password", formData,config)
+ dispatch({
+  type: FORGET_PASSWORD_SUCCESS,
+  payload: res.data
+})
+loadUser();
+
+ }
+ catch(err){
+dispatch({
+  type:FORGET_PASSWORD_FAIL,
+  payload:err.response
+})
+
+
+ }
+
+
+
+}
   return (
     <AuthContext.Provider
       value={{
@@ -110,7 +141,8 @@ const AuthState = props => {
         login,
         logout,
         loadUser,
-        clearErrors
+        clearErrors,
+        forgetpassword
       }}
     >
       {props.children}
