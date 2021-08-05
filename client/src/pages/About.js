@@ -1,76 +1,74 @@
-import React, { useState, useContext, useEffect } from "react";
-import AuthContext from "../contexts/auth/authContext"
-import {AlertContext }from "../contexts/alert/alertContext";
-import { useHistory} from 'react-router-dom'
 
-const Login = ()=> {
-  const history =useHistory()
-  const alertContext = useContext(AlertContext);
-  const authContext = useContext(AuthContext);
+import React from 'react';
+import Layout from '../components/Layout'
 
-  const { setAlert } = alertContext;
-  const { login, error, clearErrors, isAuthenticated } = authContext;
+const About = () => {
+    
+    return ( 
+        <Layout title="About us" >
+        <div >
+            
+            <div className="text-center mt-5">
+            <h1>ABOUT US</h1>
+            <h4>We deliver gas cylinders  and  all there products </h4>
+            <p>Gas store is an on-demand ordering and delivery service for your daily needs. Gas store was born out of a strong desire to make the lives of people easier. From peering through traffic to having multiple responsibilities at home and work, our lives have never been so complex. In such times Gas store is your convenience partner; working hard to simplify your life!
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      history.push("/subscribe");
-    }
+              Gas store gets your gas delivered at home, gets your favourite gas delivered instantly, and helps small retails,customers to access the gas cyliders in far flung places get their supplies conveniently. We simplify your life by taking over some of your most mundane but important tasks.</p>
+         
+          
+         </div>
+         <div className="text-center mt-5">
 
-    if (error === "Invalid Credentials") {
-      setAlert(error, "danger");
-      clearErrors();
-    }
-    // eslint-disable-next-line
-  }, [error, isAuthenticated, history]);
+         <h1>CONTACT US </h1>
 
-  const [user, setUser] = useState({
-    email: "",
-    password: ""
-  });
-
-  const { email, password } = user;
-
-  const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
-
-  const onSubmit = e => {
-    e.preventDefault();
-    if (email === "" || password === "") {
-      setAlert("Please fill in all fields", "danger");
-    } else {
-      login({
-        email,
-        password
-      });
-    }
-  };
-
-  return (
-    <div className='form-container'>
-      <h1>
-        Account <span className='text-primary'>Login</span>
-      </h1>
-      <form onSubmit={onSubmit}>
+         </div>
+      
+      <div className='form-container'>
+    
         <div className='form-group'>
-          <label htmlFor='email'>Email Adress</label>
-          <input type='email' name='email' value={email} onChange={onChange} />
-        </div>
-        <div className='form-group'>
-          <label htmlFor='password'>Password</label>
+          
           <input
-            type='password'
-            name='password'
-            value={password}
-            onChange={onChange}
+            id='name'
+            type='text'
+            name='name'
+            placeholder="name"
+
+        
           />
         </div>
+        <div className='form-group'>
+        
+          <input
+            id='email'
+            type='email'
+            name='email'
+            placeholder="Email"
+          />
+        </div>
+       
+       
+          <input
+            id='phone'
+            type='phone'
+            name='phone'
+            placeholder="Phone"
+          />
+          <input
+            id='password'
+            type='password'
+            name='password'
+           placeholder="password"/>
         <input
           type='submit'
-          value='Login'
+          value='submit'
           className='btn btn-primary btn-block'
         />
-      </form>
+         
     </div>
-  );
-};
-
-export default Login;
+            
+        </div>
+    </Layout>
+     );
+}
+ 
+export default About

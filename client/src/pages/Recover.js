@@ -9,21 +9,21 @@ const Forgetpassword = () => {
     const authContext = useContext(AuthContext);
     const { setAlert } = alertContext;
     const {forgetpassword} = authContext;
-    const [user, setUser] = useState({ resetpassword: "" });
+    const [user, setUser] = useState({ email: "" });
 
-      const { resetpassword } = user;
+      const { email } = user;
       const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
 
       const onSubmit = e => {
         e.preventDefault();
-        if (resetpassword === "") {
+        if (email === "") {
           setAlert("Please enter the field", "danger");
         }
          else {
           forgetpassword({
         
-            resetpassword
+            email
           });
         }
       };
@@ -39,18 +39,19 @@ const Forgetpassword = () => {
               <div className='form-group'>
           <label htmlFor='password'>Reset-Password</label>
           <input
-            id='password'
-            type='password'
-            name='resetpassword'
-            value={resetpassword}
+            id='email'
+            type='email'
+            name='email'
+            value={email}
             onChange={onChange}
+            placeholder="Email"
             required
             minLength='6'
           />
           </div>
           <input
           type='submit'
-          value='Resetpassword'
+          value='submit'
           className='btn btn-primary btn-block'
         />
           </form>
