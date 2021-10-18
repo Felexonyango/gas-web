@@ -462,3 +462,30 @@ table th {
     justify-content: center;
   }
 }
+.abb{
+  text-align: center;
+}
+
+.item1{
+background-image: url("./assets/img5.jpg");
+width: 500px;
+background-repeat: no-repeat;
+flex-grow: 1;
+  height: 660px;
+  align-items: center;
+
+}
+.item2{
+background-image: url("./assets/img6.jpg");
+height: 450px;
+text-align: center;
+flex-grow: 4;
+background-repeat: no-repeat
+
+}
+
+.conta{
+  display: flex;
+  justify-content: space-between;
+
+}

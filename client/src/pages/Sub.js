@@ -49,7 +49,7 @@ const  Sub = ()=> {
               
             </div>
             <div>
-            <Link to ='/recover'>resetpassword</Link>
+            <Link to ='/recover'>Resetpassword</Link>
             </div>
             
         </div>

@@ -5,6 +5,22 @@
 form{
     text-align: center;
 }
-log{
-    width: 20%;
+
+.background{
+  
+background-image: url("../assets/img7.jpg");
+height:100vh;
+width: 100%;
+
+   background-repeat: no-repeat;
+   background-size: contain;
+   text-align: left;
+
+   position: relative; 
+}
+.paragraph{
+font-weight: bold;
+text-decoration: none;
+font-size: 1rem;
+
 }

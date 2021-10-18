@@ -1,13 +1,9 @@
 const { Router } = require('express');
 const router = Router();
 const {STRIPE_KEY} =require('../confing')
- 
 
 // Stripe
 const stripe = require('stripe')(`${STRIPE_KEY}`);
-
-
-
 router.post('/checkout', async (req, res) => {
 	try{
 	const  {customer_email} =req.body

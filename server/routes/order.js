@@ -3,8 +3,6 @@ const expressAsyncHandler = require('express-async-handler');
 const Order = require('../model/orderModel')
 const { isAuth } = require('../util');
 const orderRouter = express.Router();
-
- 
 orderRouter.get('/mine', isAuth, expressAsyncHandler(async (req, res) => {
     // find user orders via user._id from OrderModel
     const orders = await Order.find({ user: req.user._id });

@@ -10,7 +10,7 @@ import Register from "../pages/auth/Register";
 import Login from "../pages/Login";
 import About from "../pages/About";
 import Sub from "../pages/Sub"
-
+import Contact from "../pages/auth/Contact"
 
 const Routes = () => {
   return (
@@ -23,10 +23,13 @@ const Routes = () => {
           <Route path ="/recover" component={recover}/>
           < Route path="/login"component={Login}/>
           <Route path="/register"component={Register}/>
+          <Route path="/contact"component={Contact}/>
          <Route path="/about"component={About}/>
           <Route path="/order" component={Store}/>
           <Route path="/cart" component={Cart} />
           <Route path="*" component={NotFound} />
+      
+        
        
         </Switch>
     </Router>

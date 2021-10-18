@@ -1,18 +1,23 @@
 .header {
+   
     padding: 10px;
-    text-align: center;
+    text-align:center;
+    background-color: darkgray;
+   
 
     a {
         display: inline-block;
         margin-right: 10px;
-        padding: 5px 10px;
+        padding: 20px 20px;
+        text-decoration: none;
+        color: white;
+    
         svg {
             width: 18px;
             margin-right: 5px;
         }
     }
-    .logo{
-       font-size: 1.5rem;
-    }
+    
 
 }
+

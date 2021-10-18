@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import {AlertContext} from "../../contexts/alert/alertContext"
 import AuthContext from "../../contexts/auth/authContext"
+import Layout from '../../components/Layout'
 import {Link, useHistory} from 'react-router-dom'
 const Register = ()=> {
   const history =useHistory()
@@ -56,10 +57,14 @@ const Register = ()=> {
   };
 
   return (
+    <Layout >
+      
+ 
     <div className='form-container'>
-      <h1>
-        Account <span className='text-primary'>Register</span>
+    <h1>
+        Account <span className='text-primary'>REGISTER</span>
       </h1>
+
       <form onSubmit={onSubmit}>
         <div className='form-group'>
           <label htmlFor='name'>Username</label>
@@ -119,6 +124,7 @@ const Register = ()=> {
         <Link to="/login"onClick={RedirectToLogin}>Login</Link>
       </div>
     </div>
+    </Layout>
   );
 };
 

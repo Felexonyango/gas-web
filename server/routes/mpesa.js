@@ -1,7 +1,4 @@
 // mpesa payment
-
-
-
 var express = require('express');
 var router = express.Router();
 const axios =require('axios')
@@ -15,7 +12,6 @@ console.log(error)
   }
   
 })
-
 
 router.get("/register",access,async(req,res)=>{
 try{
@@ -37,8 +33,7 @@ console.log(resp.data)
 catch(error){
   console.log(error)
 }
-  
-  
+   
 })
  //stk lipanampesa
 

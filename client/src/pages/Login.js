@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import AuthContext from "../contexts/auth/authContext"
 import {AlertContext }from "../contexts/alert/alertContext";
 import { useHistory} from 'react-router-dom'
-
+import Layout from "../components/Layout";
 const Login = ()=> {
   const history =useHistory()
   const alertContext = useContext(AlertContext);
@@ -45,6 +45,7 @@ const Login = ()=> {
   };
 
   return (
+    <Layout>
     <div className='form-container'>
       <h1>
         Account <span className='text-primary'>Login</span>
@@ -70,6 +71,7 @@ const Login = ()=> {
         />
       </form>
     </div>
+    </Layout>
   );
 };
 

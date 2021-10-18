@@ -12,8 +12,6 @@ const userSchema =new Schema({
         unique:true,
         lowercase:true,
     },
-   
-
     phone:{
         type:String
     },
@@ -28,8 +26,6 @@ const userSchema =new Schema({
     },
     resetToken:String,
     expireToken:Date,
-
-
     date:{
         type:Date,
         default:Date.now

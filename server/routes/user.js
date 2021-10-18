@@ -1,7 +1,7 @@
 const express = require('express');
 const expressAsyncHandler = require('express-async-handler');
-const bcrypt = require('bcryptjs');
-const User = require('../model/UserModel')
+const bcrypt= require('bcryptjs');
+const User= require('../model/UserModel')
 const { generateToken} = require('../util');
 const nodemailer = require("nodemailer");
 const {API_KEY} =require('../confing')
@@ -14,21 +14,12 @@ const  transporter= nodemailer.createTransport(sendgridTransport({
         API_KEY:`${API_KEY}`
     }
 }))
-
-
 userRouter.get('/',async(req,res)=>{
     res.send("Gas api created")
 })
-
-
-
-
 // /api/users/register
 userRouter.post('/register',(async (req, res) => {
-    
-    
-    try{
-        
+    try{     
         const salt = await bcrypt.genSalt(10);
         const password = await req.body.password
         const username = await req.body.username
@@ -53,9 +44,6 @@ userRouter.post('/register',(async (req, res) => {
             isAdmin: createdUser.isAdmin,
             token: generateToken(createdUser)
         });
-       
-
-
     }
     catch(err){
         console.error(err.message);
@@ -77,15 +65,12 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
             // use bcrypt to validate password
             if(bcrypt.compareSync(req.body.password, user.password)) {
                 res.send({
-                    _id: user._id,
-                    
+                    _id: user._id, 
                     email: user.email,
                     password:user.password,
                     isAdmin: user.isAdmin,
                     token: generateToken(user)
-                });
-                
-                
+                 });
             }
         }
     }
