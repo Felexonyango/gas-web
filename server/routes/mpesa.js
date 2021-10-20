@@ -2,6 +2,22 @@
 var express = require('express');
 var router = express.Router();
 const axios =require('axios')
+const User = require("../model/UserModel");
+const config = require("../confing")
+
+const shortcode =config.SHORTCODE
+const passkey = config.PASSKEY
+
+const newPassword = () => {
+  const dt = datetime.create();
+  const formatted = dt.format('YmdHMS');
+
+  const passString = shortcode + passkey + formatted;
+  return {
+      timestamp: formatted,
+      password: Buffer.from(passString).toString('base64')
+  };
+}
 
 router.get("/access_token",access,async(req,res)=>{
   try{
@@ -12,71 +28,49 @@ console.log(error)
   }
   
 })
-
-router.get("/register",access,async(req,res)=>{
-try{
-  let url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
-  
-  const auth = "Bearer" +req.access_token
- 
-const resp = await axios(`${url}`,{
-  headers: {
-    Authorization: `Basic ${auth}`,
-    "content-type": "application/json"
-  }
-
-})
-
-console.log(resp.data)
-
-}
-catch(error){
-  console.log(error)
-}
-   
-})
  //stk lipanampesa
 
-router.get("/stk",access,async(req,res)=>{
-  try{
-    let url='https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
-    let auth="Bearer "+ req.access_token
-    let date= new Date()
-    const Timestamp= date.getFullYear() +"" + date.getMonth()+""+ date.getDate()+""+date.getHours() +""+ date.getMinutes()
-    const Password= new Buffer.from("600113"+"	bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"+ Timestamp).toString('base64')
+router.post("/stk",access,async(req,res)=>{
+  
+  let auth="Bearer "+ req.access_token
+   
+    let url="https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+  
+    const {timestamp, password} = newPassword();
+    const user = await User.find({email: req.session.email})
+
+    const phone = `254${user[0].phone}`
+
+   const data = {
+    "BusinessShortCode": shortcode,
+    "Password": password,
+    "Timestamp": timestamp,
+    "TransactionType": "CustomerBuyGoodsOnline",
+    "Amount": "1",
+    "PartyA": phone,
+    "PartyB": shortcode,
+    "PhoneNumber": phone,
+    "CallBackURL": `https://amazon-cellular.com/orders/paying`,
+    "AccountReference": "Amazon Cellular Live",
+    "TransactionDesc": "Lipa na M-PESA"
+}
+ 
+axios.post(`${url}`, data, {
+  method:"POST",
+  headers : {
+    "Authorization" : `${auth}`
+  }
+})
+.then((res) => {
+ res.status(200).json({msg:"success"})
+})
+.catch( (reason) => {
     
-   const resp = await axios.get(`${url}`,{
-    method:"POST",
-    headers : {
-      "Authorization" : `${auth}`
-    },
-    json:{
- 
-     "BusinessShortCode": "600113 ",
-     "Password": Password,
-     "Timestamp": Timestamp,
-     "TransactionType": "CustomerPayBillOnline",
-     "Amount": "1",
-     "PartyA": "254748793263  ",
-     "PartyB": "600113",
-      "PhoneNumber": "254748793263",
-     "CallBackUR": "https://onyango.com/stk_callback",
-     "AccountReference": "345Demotest",
-     "TransactionDesc": "activation "
-    }
- 
- })
- console.log(resp.data);
-
-  } catch(error){
-    console.log(error)
-
-  }   
-
-
+    reason.status(400).json({msg:"Error"})
+    
+})
 })
 
-// function to access token from daraja to be consoled
 
 async function access(){
   try {
@@ -85,7 +79,7 @@ async function access(){
     const url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
     const auth = Buffer.from(`${Key}:${Secret}`).toString("base64");
     
-      const resp = await axios.get(`${url}`,{
+      const res = await axios.get(`${url}`,{
         method:"POST",
         headers : {
           Authorization: `Basic ${auth}`,
@@ -93,7 +87,7 @@ async function access(){
         },
         json:{
 
-          "Shortcode":"600113",
+          "Shortcode":shortcode,
           "ResponseType": "Completed",
           "ConfirmationURL": "http://197.248.86.122:801/confirmation",
           "ValidationURL": "http://197.248.86.122:801/validation",
@@ -101,15 +95,11 @@ async function access(){
         }
       });
       
-      console.log(resp.data);
+      console.log(res.data);
   } catch (err) {
       // Handle Error Here
       console.error(err);
   }
-};
 
-
-
-
- 
+}
  module.exports = router;

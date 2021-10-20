@@ -7,7 +7,7 @@ const connectDB = require('./db');
 const  userRouter=require('./routes/user')
 const productRouter =require('./routes/product')
 const orderRouter =require('./routes/order')
-//const checkout = require('./routes/checkout')
+const checkout = require('./routes/mpesa')
 const Stripe =require('./routes/payment')
 const app = express();
 //const ngrok = require('ngrok');
@@ -37,7 +37,7 @@ app.use('/api/products', productRouter)
 app.use('/api/order',orderRouter)
 app.use('/api/payment',Stripe)
 
- //app.use('/api/payment',checkout)
+ app.use('/api/payment',checkout)
   // Init MIddleware
 app.use(express.json({ extended: false }));
 

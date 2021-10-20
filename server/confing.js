@@ -9,6 +9,9 @@ require('process')
  config.STRIPE_KEY=""+process.env.STRIPE_KEY,
 
 config.API_KEY=""+process.env.API_KEY,
-
+config.SHORTCODE= ""+process.env.SHORTCODE,
+config. PASSKEY=""+process.env.PASSKEY,
+config.CONSUMER_KEY=""+process.env.CONSUMER_KEY,
+config.CONSUMER_SECRETE=""+process.env.CONSUMER_SECRETE,
 
  module.exports =config

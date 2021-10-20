@@ -21,6 +21,7 @@ const Contact = () => {
 <a href="https://www.telegram.com/Felex" className="twitter social">
   <FontAwesomeIcon icon={faTelegram} size="2x" />
 </a>
+<a class='direct-mail' href="mailto:felexonyango19@gmai.com">felexonyango19@gmail.com</a>
               
         </div>
     )
