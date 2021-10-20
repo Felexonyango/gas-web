@@ -13,5 +13,5 @@ config.SHORTCODE= ""+process.env.SHORTCODE,
 config. PASSKEY=""+process.env.PASSKEY,
 config.CONSUMER_KEY=""+process.env.CONSUMER_KEY,
 config.CONSUMER_SECRETE=""+process.env.CONSUMER_SECRETE,
-
+config.PASSWORD=""+process.env.PASSWORD,
  module.exports =config

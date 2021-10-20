@@ -1,25 +1,18 @@
-const express = require('express');
-const expressAsyncHandler = require('express-async-handler');
-const bcrypt= require('bcryptjs');
 const User= require('../model/UserModel')
 const { generateToken} = require('../util');
 const nodemailer = require("nodemailer");
-const {API_KEY} =require('../confing')
-const sendgridTransport =require('nodemailer-sendgrid-transport')
-const crypto  =require('crypto')
+const {PASSWORD} =require('../confing');
+const express =require('express')
 const userRouter = express.Router();
-const  transporter= nodemailer.createTransport(sendgridTransport({
-
-    auth:{
-        API_KEY:`${API_KEY}`
-    }
-}))
+const bcrypt =require('bcryptjs')
 userRouter.get('/',async(req,res)=>{
     res.send("Gas api created")
 })
 // /api/users/register
-userRouter.post('/register',(async (req, res) => {
-    try{     
+
+userRouter.post('/register',async(req,res)=>{
+    try {
+      
         const salt = await bcrypt.genSalt(10);
         const password = await req.body.password
         const username = await req.body.username
@@ -33,30 +26,25 @@ userRouter.post('/register',(async (req, res) => {
         });
         // save new user in db
         const createdUser = await user.save()
-        User.findOne({ email });
-
-        // send user obj back
-      return res.send({
+        return res.send({
             _id: createdUser._id,
             username: createdUser.username,
             email: createdUser.email,
             phone:createdUser.phone,
-            isAdmin: createdUser.isAdmin,
             token: generateToken(createdUser)
         });
-    }
-    catch(err){
-        console.error(err.message);
-        res.status(500).send("Server Error");
-    }
+        
 
-
+    }
+    catch (e) {
+        console.log(e)
+    }
 })
-);
+
 
 
 // /api/user/signin route 
-userRouter.post('/login', expressAsyncHandler(async (req, res) => {
+userRouter.post('/login', async (req, res) => {
     try{
 
         const user = await User.findOne({ email: req.body.email});
@@ -82,41 +70,54 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
     
   
 })
-)
+
+
+
+
 //reset password
 
-userRouter.post("/reset-password",(req,res)=>{
-crypto.randomBytes(32,(err,buffer)=>{
-    if(err){
-        console.log(err)
-    }
-    const token =buffer.toString("hex")
-    User.findOne({email:req.body.email})
-    .then(user=>{
-        if(!user){
-            return  res.status(500).json({error:"user does not exist with that email"})
+userRouter.post("/reset-password",async(req,res ,link)=>{
+    try{
+        const user = await User.findOne({ email: req.body.email});
+
+    const transport = nodemailer.createTransport({
+        service: 'gmail',
+        secure: false,
+        auth: {
+            user: 'gasstore666@gmail.com',
+                pass: `${PASSWORD}`
         }
-        user.resetToken=token;
-        user.expireToken=Date.now() +36000000
-        user.save()
-        .then(result=>{
-            transporter.sendMail({
-                to:user.email,
-                from:"no-replay@insta.com",
-                subject:"password reset",
-                html:`
-                <p>You requested for password reset</P>
-                <h5>click in this  <a href ="http://localhost:3000/reset${token}">link </a> to reset password </h5>
-                <`
-            })
-             return res.json({message:"check your email"})
-        })
-        
-        
-
     })
+
+    const mailOptions = {
+        from: '"GAS STORE 🛒" <gasstore666@gmail.com>',
+        to: user.email,
+        cc: ['felexonyango19@gmail.com'],
+        subject: `RESETTING GAS STORE`,
+        html: `
+Dear ${user.username},
+<br><br>
+Click the link below to reset your password for Gas store. The link expires after 15 minutes and it's for a one time use. <br>
+<a href="${link}">Reset my password</a>
+<br>
+If you did not initiate a forgot password request kindly report this incident by simply replying to this email or calling us on <a href="tel:+254748793253"> 0748793263</a>
+<br><br>
+Kind regards,<br>
+Gas store
+`,
+    }
+
+    const res =await transport.sendMail(mailOptions)
+    return res;
+    
+
+}
+catch (e) {
+    console.log(e)
+}
 })
 
-})
+
+
 
 module.exports = userRouter;

@@ -37,7 +37,7 @@ router.post("/stk",access,async(req,res)=>{
     let url="https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
   
     const {timestamp, password} = newPassword();
-    const user = await User.find({email: req.session.email})
+    const user = await User.find({email: req.body.email})
 
     const phone = `254${user[0].phone}`
 
