@@ -5,12 +5,6 @@ var cors =require('cors')
 const path =require('path')
 const connectDB = require('./db');
 
-
-//importing routes
-const  userRouter=require('./routes/user')
-const Stripe =require('./routes/payment')
-const mpesa =require('./routes/mpesa')
-
 const app = express();
 
 
@@ -30,9 +24,9 @@ if (process.env.NODE_ENV === "production") {
   }
 
 //Routes 
-app.use('/api/users', userRouter);
-app.use('/api/payment',Stripe)
-app.use('/api/payment',mpesa)
+
+app.use(require("./routes/user"))
+app.use(require("./routes/payment"))
 
 
   // Init MIddleware
@@ -42,3 +36,5 @@ app.use(express.json({ extended: false }));
   const PORT = process.env.PORT || 5000;
   
   app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+  module.exports = app;
