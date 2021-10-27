@@ -4,17 +4,15 @@ const express =require('express')
 var cors =require('cors')
 const path =require('path')
 const connectDB = require('./db');
-const  userRouter=require('./routes/user')
-const productRouter =require('./routes/product')
-const orderRouter =require('./routes/order')
-const checkout = require('./routes/mpesa')
-const Stripe =require('./routes/payment')
-const app = express();
-//const ngrok = require('ngrok');
 
-//(async function() {
-  //const url = await ngrok.connect();
-//})();
+
+//importing routes
+const  userRouter=require('./routes/user')
+const Stripe =require('./routes/payment')
+const mpesa =require('./routes/mpesa')
+
+const app = express();
+
 
 app.use(cors())
 app.use(express.json());
@@ -33,11 +31,10 @@ if (process.env.NODE_ENV === "production") {
 
 //Routes 
 app.use('/api/users', userRouter);
-app.use('/api/products', productRouter)
-app.use('/api/order',orderRouter)
 app.use('/api/payment',Stripe)
+app.use('/api/payment',mpesa)
 
- app.use('/api/payment',checkout)
+
   // Init MIddleware
 app.use(express.json({ extended: false }));
 

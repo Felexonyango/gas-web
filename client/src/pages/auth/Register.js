@@ -98,7 +98,7 @@ const Register = ()=> {
             value={phone}
             onChange={onChange}
             required
-            minLength='6'
+            minLength='10'
           />
         </div>
         <div className='form-group'>
