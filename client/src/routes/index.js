@@ -11,6 +11,7 @@ import Login from "../pages/Login";
 import About from "../pages/About";
 import Sub from "../pages/Sub"
 import Contact from "../pages/auth/Contact"
+import PrivateRoute from './PrivateRoute'
 
 const Routes = () => {
   return (
@@ -18,8 +19,8 @@ const Routes = () => {
         <Switch>
           
         <Route exact  path='/' component={Home} />
-          <Route path="/checkout" component={Check} />
-        <Route path="/subscribe" component={Sub}/>
+        <PrivateRoute exact path ="/subscribe" component={Sub}/>
+        <PrivateRoute exact path="/checkout" component={Check} />
           <Route path ="/recover" component={recover}/>
           < Route path="/login"component={Login}/>
           <Route path="/register"component={Register}/>
@@ -28,9 +29,6 @@ const Routes = () => {
           <Route path="/order" component={Store}/>
           <Route path="/cart" component={Cart} />
           <Route path="*" component={NotFound} />
-      
-        
-       
         </Switch>
     </Router>
   );

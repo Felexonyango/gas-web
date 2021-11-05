@@ -12,7 +12,7 @@ const Register = ()=> {
   useEffect(() => {
     if (isAuthenticated) {
       
-      history.push("/login");
+      history.push("/");
     }
 
     if (error === "User already exists") {
@@ -22,35 +22,34 @@ const Register = ()=> {
     // eslint-disable-next-line
   }, [error, isAuthenticated, history]);
 
-  const RedirectToLogin=(e)  =>{
-       e.preventDefault()
-       history.push('/login')
-
-  }
-
   const [user, setUser] = useState({
     username: "",
     email: "",
     password: "",
+    password2:"",
     phone:""
     
   });
 
-  const { username, email, password, phone } = user;
+  const { username, email, password, password2, phone } = user;
 
   const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
   const onSubmit = e => {
     e.preventDefault();
-    if (username === "" || email === "" || password === ""||phone==="") {
+    if (username === "" || email === "" || password === ""||password === ""||phone==="") {
       setAlert("Please enter all fields", "danger");
     }
+   else if (password !== password2) {
+      setAlert("Passwords do not match", "danger");
+    } 
     else {
       register({
         username,
         email,
         phone,
-        password
+        password,
+        password2
        
       });
     }
@@ -113,6 +112,18 @@ const Register = ()=> {
             minLength='6'
           />
         </div>
+        <div className='form-group'>
+          <label htmlFor='password'>Confirm Password</label>
+          <input
+            id='password'
+            type='password'
+            name='password'
+            value={password2}
+            onChange={onChange}
+            required
+            minLength='6'
+          />
+        </div>
         <input
           type='submit'
           value='Register'
@@ -120,9 +131,9 @@ const Register = ()=> {
         />
         
       </form>
-      <div>
-        <Link to="/login"onClick={RedirectToLogin}>Login</Link>
-      </div>
+      <p className='my-1'>
+        Already have an account? <Link to='/login'>Sign In</Link>
+      </p>
     </div>
     </Layout>
   );

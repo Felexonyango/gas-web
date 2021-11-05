@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect,useContext} from 'react'
 import { HelmetProvider } from 'react-helmet-async';
 import ProductsContextProvider from './contexts/ProductsContext';
 import CartContextProvider from './contexts/CartContext';
@@ -9,13 +9,27 @@ import {loadStripe} from '@stripe/stripe-js'
 import "./App.css";
 import AuthState from './contexts/auth/AuthState'
 import AlertState from './contexts/alert/AlertState'
+import AuthContext from "./contexts/auth/authContext"
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
+
+
 
 const stripePromise =loadStripe(`${process.env.React_stripe}`)
 const App = () => {
+  const authContext = useContext(AuthContext);
+
+
+  useEffect(()=>{
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+      authContext.loadUser();
+    } else{
+      
+    }
+
+
+  })
+ 
     return ( 
       <AuthState>
         <AlertState>

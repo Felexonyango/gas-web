@@ -3,6 +3,7 @@ import AuthContext from "../contexts/auth/authContext"
 import {AlertContext }from "../contexts/alert/alertContext";
 import { useHistory} from 'react-router-dom'
 import Layout from "../components/Layout";
+import {Link} from 'react-router-dom'
 const Login = ()=> {
   const history =useHistory()
   const alertContext = useContext(AlertContext);
@@ -70,6 +71,9 @@ const Login = ()=> {
           className='btn btn-primary btn-block'
         />
       </form>
+      <p className='my-1'>
+        Don't have an account? <Link to='/register'>Sign Up</Link>
+      </p>
     </div>
     </Layout>
   );

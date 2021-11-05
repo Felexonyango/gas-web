@@ -3,6 +3,7 @@ import React,{useContext,Fragment,useEffect} from 'react';
 import Layout from '../components/Layout'
 import AuthContext from "../contexts/auth/authContext";
 import { Link } from "react-router-dom"
+
 const  Sub = ()=> {
   const authContext = useContext(AuthContext);
  
@@ -12,7 +13,7 @@ const  Sub = ()=> {
  })
     
 
-  const { isAuthenticated, logout, user } = authContext;
+  const { isAuthenticated, logout, user,loading } = authContext;
 
   const onLogout = () => {
     logout();
@@ -23,7 +24,7 @@ const  Sub = ()=> {
   const authLinks = (
 
     <Fragment>
-      <li>Hello {user && user.name}</li>
+      <li>Hello {user && user.username}</li>
       <li>
         <a onClick={onLogout} href='#!'>
           <i className='fas fa-sign-out-alt'></i>{" "}
@@ -34,9 +35,16 @@ const  Sub = ()=> {
   );
   const guestLinks = (
     <Fragment>
+      <ul>
       <li>
-        <Link to='/'> LOGOUT</Link>
+        <Link to='/register'>Register</Link>
       </li>
+      <li>
+        <Link to='/login'>login</Link>
+      </li>
+
+      
+    </ul>
       
     </Fragment>
   );
@@ -45,7 +53,9 @@ const  Sub = ()=> {
         <div >
             <div className="text-center mt-5">
                 <h1>Subscription</h1>
-                <ul>{isAuthenticated ? authLinks : guestLinks}</ul>
+                <ul> {!loading && (
+        <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
+      )}</ul>
               
             </div>
             <div>

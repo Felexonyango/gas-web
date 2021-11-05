@@ -127,8 +127,7 @@ dispatch({
  }
 }
   return (
-    <AuthContext.Provider
-      value={{
+    <AuthContext.Provider value={{
         token: state.token,
         isAuthenticated: state.isAuthenticated,
         loading: state.loading,
