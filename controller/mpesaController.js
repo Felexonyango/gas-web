@@ -67,9 +67,9 @@ const stkPush = (req,res) => {
     Timestamp:formarted,
     TransactionType: "CustomerPayBillOnline",
     Amount: 10,
-    PartyA: 254714129852,
+    PartyA: 254748793263,
     PartyB: 174379,
-    PhoneNumber: 254714129852,
+    PhoneNumber: 254748793263,
     CallBackURL: "https://mydomain.com/path",
     AccountReference: "CompanyXLTD",
     TransactionDesc: "Am working" 
