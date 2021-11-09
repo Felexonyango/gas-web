@@ -1,11 +1,11 @@
 require('dotenv').config();
 const datetime = require('node-datetime');
 const axios = require('axios');
-const { response } = require('express');
 const passKey = process.env.PASSKEY;
 const shortCode = process.env.SHORTCODE;
 const consumerKey = process.env.CONSUMERKEY;
 const consumerSecret = process.env.CONSUMERSECRET;
+const User =require('../model/UserModel')
 
 const newPassword =  (req,res) => {
     const dt = datetime.create();
@@ -56,6 +56,15 @@ const stkPush = (req,res) => {
  const formarted = dt.format('YmdHMS');
 
 
+const phone = req.body.phone
+const amount =req.body.amount
+const user = new User({
+  
+   phone:phone,
+   amount:amount
+})
+User.findOne({email:req.body.email})
+
  const headers = {
     Authorization: 'Bearer ' + token,
  };
@@ -66,13 +75,13 @@ const stkPush = (req,res) => {
     Password: newPassword(),
     Timestamp:formarted,
     TransactionType: "CustomerPayBillOnline",
-    Amount: 10,
-    PartyA: 254748793263,
+    Amount: user.amount,
+    PartyA: user.phone,
     PartyB: 174379,
-    PhoneNumber: 254748793263,
+    PhoneNumber:user.phone,
     CallBackURL: "https://mydomain.com/path",
-    AccountReference: "CompanyXLTD",
-    TransactionDesc: "Am working" 
+    AccountReference: "GAS STORE",
+    TransactionDesc: "SHOP WITH GAS STORE" 
   };
 
   axios
