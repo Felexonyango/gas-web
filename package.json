@@ -37,6 +37,7 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "pesapal": "0.0.4",
     "stripe": "^8.165.0",
+    "unirest": "^0.6.0",
     "uuid": "^8.3.2"
   }
 }
