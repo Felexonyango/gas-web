@@ -1,11 +1,12 @@
 require('dotenv').config();
 const datetime = require('node-datetime');
 const axios = require('axios');
+const User =require('../model/UserModel')
+const { response } = require('express');
 const passKey = process.env.PASSKEY;
 const shortCode = process.env.SHORTCODE;
-const consumerKey = process.env.CONSUMERKEY;
-const consumerSecret = process.env.CONSUMERSECRET;
-const User =require('../model/UserModel')
+const consumerKey = process.env.CONSUMER_KEY;
+const consumerSecret = process.env.CONSUMER_SECRETE;
 
 const newPassword =  (req,res) => {
     const dt = datetime.create();
@@ -41,7 +42,7 @@ const token = (req,res,next) => {
         let data =response.data;
         let access_token =data.access_token;
         req.token = access_token;
-        console.log(access_token);
+       
         next();
 
     })
@@ -50,20 +51,15 @@ const token = (req,res,next) => {
 };
 
 const stkPush = (req,res) => {
+    
  const token = req.token;
  res.send(token);
  const dt = datetime.create();
  const formarted = dt.format('YmdHMS');
 
-
-const phone = req.body.phone
-const amount =req.body.amount
-const user = new User({
-  
-   phone:phone,
-   amount:amount
-})
-User.findOne({email:req.body.email})
+ const phone = req.body.phone
+ const amount =req.body.amount
+ const user = new User({ phone:phone, amount:amount})
 
  const headers = {
     Authorization: 'Bearer ' + token,
@@ -78,10 +74,10 @@ User.findOne({email:req.body.email})
     Amount: user.amount,
     PartyA: user.phone,
     PartyB: 174379,
-    PhoneNumber:user.phone,
+    PhoneNumber: user.phone,
     CallBackURL: "https://mydomain.com/path",
-    AccountReference: "GAS STORE",
-    TransactionDesc: "SHOP WITH GAS STORE" 
+    AccountReference: "CompanyXLTD",
+    TransactionDesc: "Am working" 
   };
 
   axios

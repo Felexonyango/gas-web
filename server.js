@@ -4,8 +4,7 @@ const express =require('express')
 var cors =require('cors')
 const path =require('path')
 const connectDB = require('./db');
-const mpesaRoutes = require('./routes/mpesa-routes')
-
+const mpesaRoutes =require('./routes/mpesa-routes')
 const app = express();
 
 
@@ -27,8 +26,8 @@ if (process.env.NODE_ENV === "production") {
 //Routes 
 
 app.use(require("./routes/user"))
-app.use(require("./routes/payment"))
-app.use("/api",mpesaRoutes.routes)
+app.use('/api/v1',mpesaRoutes.routes);
+
 
   // Init MIddleware
 app.use(express.json({ extended: false }));
