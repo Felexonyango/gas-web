@@ -50,46 +50,47 @@ const token = (req,res,next) => {
 
 };
 
-const stkPush = (req,res) => {
+const stkPush = async(req,res) => {
+    try{
+        const token = req.token;
+        res.send(token);
+        const dt = datetime.create();
+        const formarted = dt.format('YmdHMS');
+       
+        const phone = req.body.phone
+        const amount =req.body.amount
+        const user = new User({ phone:phone, amount:amount})
+       
+        const headers = {
+           Authorization: 'Bearer ' + token,
+        };
+       
+        const stkUrl = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+        const data = {
+           BusinessShortCode:shortCode,
+           Password: newPassword(),
+           Timestamp:formarted,
+           TransactionType: "CustomerPayBillOnline",
+           Amount: user.amount,
+           PartyA: user.phone,
+           PartyB: 174379,
+           PhoneNumber: user.phone,
+           CallBackURL: "https://mydomain.com/path",
+           AccountReference: "GAS STORE",
+           TransactionDesc: "LIPA NA MPESA" 
+         };
+       
+        const response= await  axios.post(stkUrl,data,{headers:headers})
+       
+        return response.data
+    }
+    catch(err){
+        console.log(err)
+
+    }
     
- const token = req.token;
- res.send(token);
- const dt = datetime.create();
- const formarted = dt.format('YmdHMS');
-
- const phone = req.body.phone
- const amount =req.body.amount
- const user = new User({ phone:phone, amount:amount})
-
- const headers = {
-    Authorization: 'Bearer ' + token,
- };
-
- const stkUrl = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
- const data = {
-    BusinessShortCode:shortCode,
-    Password: newPassword(),
-    Timestamp:formarted,
-    TransactionType: "CustomerPayBillOnline",
-    Amount: user.amount,
-    PartyA: user.phone,
-    PartyB: 174379,
-    PhoneNumber: user.phone,
-    CallBackURL: "https://mydomain.com/path",
-    AccountReference: "CompanyXLTD",
-    TransactionDesc: "Am working" 
-  };
-
-  axios
-  .post(stkUrl,data,{
-        headers:headers,
-      }).then((response) => res.send(response.data));
-
+ 
 };
-
-
-
-
 
 module.exports = {
     newPassword,

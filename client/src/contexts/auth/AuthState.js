@@ -3,6 +3,7 @@ import axios from "axios";
 import AuthContext from "./authContext";
 import { AuthReducer} from './authReducer'
 import setAuthToken from "../../utils/setAuthToken";
+import  {AlertReducer}  from "../alert/alertReducer"
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -13,10 +14,13 @@ import {
   LOGOUT,
   CLEAR_ERRORS,
   FORGET_PASSWORD_SUCCESS,
-  FORGET_PASSWORD_FAIL
+  FORGET_PASSWORD_FAIL,
+  PAY_MPESA_SUCCESS,
+  PAY_MPESA_FAILURE
 } from "../types";
 
 const AuthState = props => {
+  
   const initialState = {
     token: localStorage.getItem("token"),
     isAuthenticated: null,
@@ -27,69 +31,89 @@ const AuthState = props => {
 
   const [state, dispatch] = useReducer(AuthReducer, initialState);
 
-  // Load User
-  const loadUser = async () => {
+  if (localStorage.token) {
     setAuthToken(localStorage.token);
-
+  }
+  const loadUser = () => async dispatch => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+  
     try {
-      const res = await axios.get("api/users");
-
+      const res = await axios.get("/api/user");
+  
       dispatch({
         type: USER_LOADED,
         payload: res.data
       });
-    } catch (err) {
-      dispatch({ type: AUTH_ERROR });
+    } catch (error) {
+      dispatch({
+        type: AUTH_ERROR
+      });
     }
   };
-
   // Register User
-  const register = async formData=>{
+  const register =(username,email,phone,password)=>async dispatch=>{
     const config = {
       headers: {
         "Content-Type": "application/json"
       }
     };
-   
+    const body = JSON.stringify({ username, email, password,phone });
+
     try {
-      const res = await axios.post("api/users/register",formData,config);
+      const res = await axios.post("api/users/register",body,config);
 
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data
       });
 
-      loadUser();
-    } catch (err) {
+      dispatch(loadUser());
+    } catch (error) {
+      const errors = error.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(AlertReducer(error.msg, "danger")));
+    }
+
       dispatch({
         type: REGISTER_FAIL,
-        payload: err.response
+     
       });
     }
   };
 
   // Login User
-  const login = async formData => {
+  const login = (email, password) => async dispatch => {
   
     const config = {
       headers: {
         "Content-Type": "application/json"
       }
     };
+    const body = JSON.stringify({ email, password });
+
 
     try {
-      const res = await axios.post("api/users/login",formData, config);
+      const res = await axios.post("api/users/login",body, config);
 
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data
       });
 
-      loadUser();
-    } catch (err) {
+      dispatch(loadUser());
+    } catch (error) {
+      const errors = error.response.data.errors;
+
+      if (errors) {
+        errors.forEach(error => dispatch(AlertReducer(error.msg, "danger")));
+      }
+
       dispatch({
         type: LOGIN_FAIL,
-        payload: err.response
+       
       });
     }
   };
@@ -101,30 +125,73 @@ const AuthState = props => {
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
 
 //Reset passord 
-const forgetpassword =async formData =>{
+const forgetpassword = (email)=>async dispatch =>{
   const config = {
     headers: {
       "Content-Type": "application/json"
     }
   };
+  const body = JSON.stringify({ email });
+
  try{
 
- const res = await axios.post("api/users/reset-password", formData,config)
+ const res = await axios.post("api/users/reset-password", body,config)
  dispatch({
   type: FORGET_PASSWORD_SUCCESS,
   payload: res.data
 })
-loadUser();
 
+dispatch(loadUser());
  }
- catch(err){
+ catch(error){
+
+  const errors = error.response.data.errors;
+
+      if (errors) {
+        errors.forEach(error => dispatch(AlertReducer(error.msg, "danger")));
+      }
+
 dispatch({
   type:FORGET_PASSWORD_FAIL,
-  payload:err.response
+  
 })
 
 
  }
+}
+const pay=(phone,amount)=> async dispatch =>{
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+  try{
+    const body = JSON.stringify({ phone,amount});
+
+ 
+    const res = await axios.post("api/v1/stkpush", body,config)
+
+    dispatch({
+     type: PAY_MPESA_SUCCESS,
+     payload: res.data
+   })
+
+   
+    }
+    catch(error){
+      const errors = error.response.data.errors;
+
+      if (errors) {
+        errors.forEach(error => dispatch(AlertReducer(error.msg, "danger")));
+      }
+
+   dispatch({
+     type:PAY_MPESA_FAILURE,
+     
+   })
+   
+   
+    }
 }
   return (
     <AuthContext.Provider value={{
@@ -136,9 +203,10 @@ dispatch({
         register,
         login,
         logout,
-        loadUser,
+        
         clearErrors,
-        forgetpassword
+        forgetpassword,
+        pay
       }}
     >
       {props.children}

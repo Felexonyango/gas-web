@@ -1,5 +1,5 @@
 
-import React,{useContext,Fragment,useEffect} from 'react';
+import React,{useContext,Fragment} from 'react';
 import Layout from '../components/Layout'
 import AuthContext from "../contexts/auth/authContext";
 import { Link } from "react-router-dom"
@@ -7,11 +7,7 @@ import { Link } from "react-router-dom"
 const  Sub = ()=> {
   const authContext = useContext(AuthContext);
  
- useEffect(()=>{
 
-  authContext.loadUser();
- })
-    
 
   const { isAuthenticated, logout, user,loading } = authContext;
 
@@ -24,12 +20,11 @@ const  Sub = ()=> {
   const authLinks = (
 
     <Fragment>
-      <li>Hello {user && user.username}</li>
+      <h6>Hello {user && user.username}</h6>
       <li>
-        <a onClick={onLogout} href='#!'>
-          <i className='fas fa-sign-out-alt'></i>{" "}
-          <span className='hide-sm'>Logout</span>
-        </a>
+        
+     <Link to="/"onClick={onLogout} className='fas fa-sign-out-alt'>Logout</Link>
+      
       </li>
     </Fragment>
   );
